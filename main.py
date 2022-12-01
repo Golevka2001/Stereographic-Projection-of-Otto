@@ -5,13 +5,16 @@
 @Brief: 通过球极投影的方式得到otto的多种形态。
 @Author: Golevka2001<gol3vka@163.com>
 @Created Date: 2022/11/29
-@Last Modified Date: 2022/11/29
+@Last Modified Date: 2022/12/01
 """
 
 # 开导：
-from PIL import Image
-import numpy as np
 import os
+import time
+
+import numpy as np
+import pygame
+from PIL import Image
 
 # --------------- 参数部分 --------------- #
 
@@ -113,6 +116,11 @@ def projection(pix_proj: tuple, r: float, h_img: int, w_img: int, h_proj: int,
 
 
 if __name__ == '__main__':
+    pygame.mixer.init()
+    pygame.mixer.music.load('bgm.wav')
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play()
+
     path_img = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                             path_img)
     path_proj = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -154,4 +162,6 @@ if __name__ == '__main__':
         arr_proj[pix_proj] = arr_img[pix_img]
 
     Image.fromarray(arr_proj).show()  # 注释掉这行可以不弹出显示
-    # Image.fromarray(arr_proj).save(path_proj)  # 注释掉这行可以不输出文件
+    Image.fromarray(arr_proj).save(path_proj)  # 注释掉这行可以不输出文件
+
+    time.sleep(15)
