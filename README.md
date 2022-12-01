@@ -1,6 +1,6 @@
 <div align=center>
 
-# :wheelchair::wheelchair::wheelchair: Stereographic Projection of Otto :wheelchair::wheelchair::wheelchair
+# :wheelchair::wheelchair::wheelchair: Stereographic Projection of Otto :wheelchair::wheelchair::wheelchair:
 
 ```text
                                     :-=++*++=-.
