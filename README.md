@@ -43,7 +43,7 @@
 
 ## 目录
 
-- [:wheelchair::wheelchair::wheelchair: Stereographic Projection of Otto :wheelchair::wheelchair::wheelchair](#wheelchairwheelchairwheelchair-stereographic-projection-of-otto-wheelchairwheelchairwheelchair)
+- [:wheelchair::wheelchair::wheelchair: Stereographic Projection of Otto :wheelchair::wheelchair::wheelchair:](#wheelchairwheelchairwheelchair-stereographic-projection-of-otto-wheelchairwheelchairwheelchair)
   - [目录](#目录)
   - [前言](#前言)
   - [“说的道理”与“栗子头”的诞生](#说的道理与栗子头的诞生)
@@ -56,7 +56,7 @@
     - [计算坐标系旋转后的坐标](#计算坐标系旋转后的坐标)
     - [计算对应原始图像的点的坐标](#计算对应原始图像的点的坐标)
   - [程序实现](#程序实现)
-  - [运行结果](#运行结果)
+  - [测试用例](#测试用例)
     - [:laughing:说的道理](#laughing说的道理)
     - [:chestnut:栗子头](#chestnut栗子头)
   - [使用说明](#使用说明)
@@ -64,6 +64,7 @@
     - [配置 Python 环境](#配置-python-环境)
     - [安装依赖库](#安装依赖库)
     - [运行](#运行)
+    - [参数说明](#参数说明)
   - [使用许可](#使用许可)
 
 ## 前言
@@ -404,7 +405,7 @@ $$
 
 [main.py](./main.py)
 
-## 运行结果
+## 测试用例
 
 ### :laughing:说的道理
 
@@ -412,8 +413,9 @@ $$
 
 - 原始图像：[otto.png](./otto.png)
 - 图像尺寸：400 * 300
+- 垂直方向偏移量：0.4
 - 缩放倍数：1.5
-- 旋转角度： $\alpha = \beta = \gamma = 0 \degree$
+- 旋转角度： $\alpha = \gamma = 0 \degree$， $\beta = -5 \degree$
 
 ![说的道理](./README.assets/principle.png)
 
@@ -423,6 +425,7 @@ $$
 
 - 原始图像：[otto.png](./otto.png)
 - 图像尺寸：400 * 300
+- 垂直方向偏移量：-0.4
 - 缩放倍数：1
 - 旋转角度： $\alpha = \gamma = 0 \degree$， $\beta = 155 \degree$
 
@@ -449,15 +452,58 @@ pip install numpy
 
 ### 运行
 
-编辑 ```main.py``` 文件，按需修改开头部分的相关参数，包括：
-
-- 原始图像路径
-- 投影图像输出路径
-- 投影图像尺寸
-- 缩放倍数
-- 坐标轴旋转角度
+编辑 ```main.py``` 文件，按需修改开头部分的相关参数。
 
 参数调整完成后，编译运行，在所设定的输出路径下找到生成的投影图像。
+
+### 参数说明
+
+**1. 路径（相对、绝对路径均可）**
+
+```path_img```：原始图像
+
+```path_proj```：输出的投影图像
+
+**2. 输出的投影图像尺寸（像素）**
+
+```w_proj```：宽
+
+```h_proj```：高
+
+**3. 偏移量（百分比）**
+
+```offset_hor```：水平方向（向右为正）
+
+```offset_ver```：垂直方向（向下为正）
+
+输出的投影图像相当于在整个投影平面下取了一个矩形区域，以上两个参数就是调整该矩形在投影平面的位置。
+
+均为 0 时，输出的图像中心与坐标轴原点重合；例如当两个偏移量均为 $\frac{1}{4}$ 时，投影图像范围变换如下图白框所示：
+
+<div align=center>
+
+![offset](./README.assets/offset.gif)
+
+</div>
+
+**4. 缩放倍数**
+
+```scale```：缩放倍数
+
+这里的缩放倍数实际是调整球的半径，在前面的数学推导中可以看到，对于相同尺寸的投影区域，球的半径越大，输出图像中包含的内容越少，相当于放大了图像；相反地，球的半径越小，则相当于缩小了图像。
+
+**5. 旋转角度（度）**
+
+```alpha```：绕 $x$ 轴旋转
+
+```beta```：绕 $y$ 轴旋转
+
+```gamma```：绕 $z$ 轴旋转
+
+是通过坐标系的旋转等效为球上贴图的旋转来实现的，从而得到 $otto$ 的不同形态。
+
+坐标系的旋转除我在前文的推导外，也可以参考 “欧拉角-四元数的转换” ，不再赘述。
+
 
 ## 使用许可
 
