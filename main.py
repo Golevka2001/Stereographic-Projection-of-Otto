@@ -5,12 +5,11 @@
 @Brief: 通过球极投影的方式得到otto的多种形态。
 @Author: Golevka2001<gol3vka@163.com>
 @Created Date: 2022/11/29
-@Last Modified Date: 2022/12/01
+@Last Modified Date: 2022/12/02
 """
 
 # 开导：
 import os
-import time
 
 import numpy as np
 import pygame
@@ -23,9 +22,14 @@ path_img = './otto.png'
 # 投影图像输出路径：
 path_proj = './toot.png'
 
-# 投影图像输出尺寸：
+# 投影图像输出尺寸（单位：像素）：
 w_proj = 400
 h_proj = 300
+
+# 偏移量（单位：百分比）：
+# 注：用于调整输出的投影图像中心在投影平面上的位置：
+offset_hor = 0  # 水平方向偏移量（向右为正）
+offset_ver = 0.4  # 垂直方向偏移量（向下为正）
 
 # 缩放倍数
 scale = 1.5
@@ -33,7 +37,7 @@ scale = 1.5
 # 坐标轴的旋转角度：
 # 注：旋转是为了得到不同的球面投影情况（说的道理/栗子头）
 alpha = 0 * np.pi / 180  # 绕x轴旋转角度
-beta = 0 * np.pi / 180  # 绕y轴旋转角度（150°左右可得到栗子头）
+beta = -5 * np.pi / 180  # 绕y轴旋转角度（150°左右可得到栗子头）
 gamma = 0 * np.pi / 180  # 绕z轴旋转角度
 
 # --------------- 实现 --------------- #
@@ -81,6 +85,8 @@ def get_pix_on_img(point: np.ndarray, r: float, h_img: int,
         tuple: 对应在原始图像上的像素点坐标
     """
     [x, y, z] = point
+    if z > r:
+        z = r
     row = np.arccos(z / r) / np.pi
     col = np.arctan2(y, x) / 2 / np.pi + 0.5  # 加0.5是把图像中心移到平面y=0处
     # 坐标范围恢复到原始图像的尺寸：
@@ -106,8 +112,8 @@ def projection(pix_proj: tuple, r: float, h_img: int, w_img: int, h_proj: int,
     """
     # 投影图像上像素点坐标转为三维坐标：
     (row, col) = pix_proj
-    x = row - h_proj / 2
-    y = col - w_proj / 2
+    x = row + (offset_ver - 0.5) * h_proj
+    y = col + (offset_hor - 0.5) * w_proj
     z = 0
     Q = np.array([x, y, z], dtype=np.float32)
     P = get_point_on_sphere(Q, r)
@@ -118,7 +124,7 @@ def projection(pix_proj: tuple, r: float, h_img: int, w_img: int, h_proj: int,
 if __name__ == '__main__':
     pygame.mixer.init()
     pygame.mixer.music.load('bgm.wav')
-    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play()
 
     path_img = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -161,7 +167,10 @@ if __name__ == '__main__':
         pix_img = projection(pix_proj, r, h_img, w_img, h_proj, w_proj)
         arr_proj[pix_proj] = arr_img[pix_img]
 
-    Image.fromarray(arr_proj).show()  # 注释掉这行可以不弹出显示
-    Image.fromarray(arr_proj).save(path_proj)  # 注释掉这行可以不输出文件
+    pygame.mixer.music.unload()
+    pygame.mixer.music.load('dududu.mp3')
+    pygame.mixer.music.set_volume(0.8)
+    pygame.mixer.music.play()
 
-    time.sleep(15)
+    Image.fromarray(arr_proj).show()  # 注释掉这行可以不弹出显示
+    # Image.fromarray(arr_proj).save(path_proj)  # 注释掉这行可以不输出文件
